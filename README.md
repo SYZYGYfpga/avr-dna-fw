@@ -184,3 +184,5 @@ The following fuse settings are required for operation of the firmware:
 EXTENDED.SELFPRGEN - Enabled (allows use of the Flash memory for DNA)
 
 LOW.CKDIV8 - Disabled (do not divide the internal clock by 8)
+
+HIGH.BODLEVEL - Set Brown-out detection at VCC=2.7V
