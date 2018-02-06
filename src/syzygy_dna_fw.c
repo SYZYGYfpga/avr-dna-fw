@@ -61,7 +61,7 @@ const uint8_t geo_addr[16] = {0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37,
 // Registers:
 // {FW major version, FW minor version, DNA major version, DNA minor version
 //  EEPROM size (high), EEPROM size (low)}
-const uint8_t syzygy_reg[] = {0x01, 0x00, 0x01, 0x00, FW_DNA_BYTES >> 8, FW_DNA_BYTES & 0xFF};
+const uint8_t syzygy_reg[] = {0x01, 0x01, 0x01, 0x00, FW_DNA_BYTES >> 8, FW_DNA_BYTES & 0xFF};
 #define SYZYGY_REG_SIZE 6 // The syzygy_reg setup contains 6 bytes
 
 // Some (global) variables for storing the sub_address state between runs of

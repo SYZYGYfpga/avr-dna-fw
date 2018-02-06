@@ -92,11 +92,11 @@ int main(void)
 	// Populate the used_ bitfields based on the sequencer configuration
 	for(i = 0; i < 3; i++) {
 		used_analog_inputs |= current_seq_config.en_config[i] & 0x7;
-		used_enables |= ((current_seq_config.en_config[i] & (1 << EN_ENABLED_BIT)) ? 1 : 0) << i;
+		used_enables |= ((current_seq_config.en_config[i] & (1 << EN_ENABLED_BIT)) ? 0 : 1) << i;
 	}
 	
 	// Power sequencing loop
-	while ((channel_enable_done & used_enables) == used_enables) {
+	while ((channel_enable_done & used_enables) != used_enables) {
 		// Update the necessary power supply readings for each analog input
 		for(i = 0; i < 3; i++) {
 			if ((used_analog_inputs & ~crossed_thresholds) & (1 << i)) {
