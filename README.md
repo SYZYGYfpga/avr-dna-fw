@@ -153,7 +153,7 @@ by the sequencer to determine when delay values are met.
 The following pinout is assumed by default:
 
 | Pin | Connection                |
-|-----|---------------------------|
+| :-- | :------------------------ |
 | PA0 | R\_GA                     |
 | PA1 | Sequencer Analog Input 1  |
 | PA2 | Sequencer Analog Input 2  |
