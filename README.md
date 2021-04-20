@@ -67,17 +67,17 @@ up to the peripheral designer.
 The configuration of the sequencer logic is kept in a 9-byte structure starting
 at sub-address 0x9000. This data is stored in the internal EEPROM.
 
-| Address | Data                           |
-|---------|--------------------------------|
-| 0x9000  | Sequencer threshold 0          |
-| 0x9001  | Sequencer threshold 1          |
-| 0x9002  | Sequencer threshold 2          |
-| 0x9003  | Delay time for enable output 0 |
-| 0x9004  | Delay time for enable output 1 |
-| 0x9005  | Delay time for enable output 2 |
-| 0x9006  | Enable configuration 0         |
-| 0x9007  | Enable configuration 1         |
-| 0x9008  | Enable configuration 2         |
+| Address   | Data                           |
+|-----------|--------------------------------|
+| `0x9000`  | Sequencer threshold 0          |
+| `0x9001`  | Sequencer threshold 1          |
+| `0x9002`  | Sequencer threshold 2          |
+| `0x9003`  | Delay time for enable output 0 |
+| `0x9004`  | Delay time for enable output 1 |
+| `0x9005`  | Delay time for enable output 2 |
+| `0x9006`  | Enable configuration 0         |
+| `0x9007`  | Enable configuration 1         |
+| `0x9008`  | Enable configuration 2         |
 
 Threshold values represent an 8-bit ADC value that the analog input will be
 compared to. These values are referenced from VCC (3.3V), so each increment of
@@ -118,13 +118,13 @@ tools provided by Atmel Studio.
 
 Flash Memory Usage:
 
-- 0x000-0xBFF - Availalbe for user application
-- 0xC00-0xFFF - Reserved for DNA storage
+- 0x000 - 0xBFF - Availalbe for user application
+- 0xC00 - 0xFFF - Reserved for DNA storage
 
 EEPROM Usage:
 
-- 0x00-0xF7 - Available for use
-- 0xF7-0xFF - Reserved for power supply sequencing
+- 0x00 - 0xF7 - Available for use
+- 0xF7 - 0xFF - Reserved for power supply sequencing
 
 
 ## Interrupt Usage
