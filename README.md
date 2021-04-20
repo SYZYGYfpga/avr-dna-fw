@@ -1,12 +1,12 @@
-SYZYGY AVR Firmware
+SYZYGY DNA Firmware
 ===================
 
 ## Overview
 
-This project contains a reference firmware intended for SYZYGY peripherals.
-
-The firmware is designed to be run on an Atmel ATTiny 44a microcontroller,
-though it may be adaptable to other Atmel microcontrollers.
+This project contains a reference firmware implementing the SYZYGY DNA
+functionality for SYZYGY peripherals. The firmware is designed to be run
+on an Atmel ATTiny 44a microcontroller, though it may be adaptable to
+other Atmel microcontrollers.
 
 This firmware is written to comply with the SYZYGY Specification v1.0 along
 with the SYZYGY DNA Specification v1.0.
@@ -16,6 +16,7 @@ with the SYZYGY DNA Specification v1.0.
 - SYZYGY DNA read/write compatible MCU Firmware
 - Able to store up to 1KiB of DNA data
 - Configurable power supply sequencing for peripherals
+
 
 ## Architecture
 
@@ -33,7 +34,8 @@ back to the host in the case of a read. In the case of a write, the Timer 0
 interrupt routine will wait for the write transaction to complete, then copy
 data from the RAM receive buffer to Flash memory.
 
-## Sequencing
+
+## Power Supply Sequencing
 
 This firmware includes logic to perform power supply sequencing if desired.
 
@@ -58,6 +60,7 @@ digital low signal if configured as active low.
 Note that the MCU runs off a 3.3V supply. All digital "high" signals will
 therefore output this voltage. Conversion to other voltages if necessary is
 up to the peripheral designer.
+
 
 ### Sequencer Configuration
 
@@ -100,7 +103,8 @@ configure a different parameter. For each enable "i" the bitfield contains:
 | 3   | Enable[i] is active high (0 = active high, 1 = active low) |
 | 4   | Enable[i] is disabled (set to 1 to ignore this pin)        |
 
-## Building
+
+## Build Notes
 
 This firmware is written for use with AVR GCC 5.4 and AtmelStudio 7. To compile
 the firmware in Atmel Studio, create a new project and add the .c files in the
@@ -108,6 +112,7 @@ the firmware in Atmel Studio, create a new project and add the .c files in the
 to include the `include` directory containing the firmware header files. With
 the project configured correctly it should be possible to build and debug using
 tools provided by Atmel Studio.
+
 
 ## Memory Usage
 
@@ -120,6 +125,7 @@ EEPROM Usage:
 
 - 0x00-0xF7 - Available for use
 - 0xF7-0xFF - Reserved for power supply sequencing
+
 
 ## Interrupt Usage
 
@@ -141,6 +147,7 @@ controller to send back to the host.
 milliseconds from the initialization of the timer peripheral. This is used
 by the sequencer to determine when delay values are met.
 
+
 ## Pinout
 
 The following pinout is assumed by default:
@@ -161,13 +168,14 @@ The following pinout is assumed by default:
 | PB3 | Reserved for programming  |
 | VCC | 3.3V                      |
 
+
 ## Limitations
 
 Due to the nature of the flash memory available in the AVR microcontroller,
 writing new DNA data to the controller requires that the beginning of a page
 be written to prior to filling in the rest of the page. Each page consists of
 64 bytes. This means that a write to 0x800F must be preceeded by a write to
-0x8000. As well, the memory writes are designed to only function on a single 
+0x8000. As well, the memory writes are designed to only function on a single
 page at a time, writing across page boundaries will result in undefined
 behavior. Flash memory pages on the ATTiny44a are 64 bytes long. It is
 recommended to make consecutive writes with a power of 2 length.
@@ -177,18 +185,13 @@ limits the program memory space to the lower 3k of flash in the
 microcontroller. Exceeding this will result in undefined behavior and likely
 require a re-flash of the program on the controller.
 
+
 ## FUSE Settings
 
 The following fuse settings are required for operation of the firmware:
 
-EXTENDED.SELFPRGEN - Enabled (allows use of the Flash memory for DNA)
-
-LOW.CKDIV8 - Disabled (do not divide the internal clock by 8)
-
-HIGH.BODLEVEL - Set Brown-out detection at VCC=2.7V
-
-When set properly, the Fuse Registers should read:
-
-EXTENDED = 0xFE
-HIGH = 0xDD
-LOW = 0xE2
+| Register   | Value   | Details                                                         |
+|------------|---------|-----------------------------------------------------------------|
+| `EXTENDED` | `0xFE`  | `SELFPRGEN` - Enabled (allows use of the Flash memory for DNA)  |
+| `HIGH`     | `0xDD`  | `CKDIV8` - Disabled (do not divide the internal clock by 8)     |
+| `LOW`      | `0xE2`  | `BODLEVEL` - Set Brown-out detection at VCC=2.7V                |
