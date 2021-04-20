@@ -68,7 +68,7 @@ The configuration of the sequencer logic is kept in a 9-byte structure starting
 at sub-address 0x9000. This data is stored in the internal EEPROM.
 
 | Address   | Data                           |
-|-----------|--------------------------------|
+| :-------- | :----------------------------- |
 | `0x9000`  | Sequencer threshold 0          |
 | `0x9001`  | Sequencer threshold 1          |
 | `0x9002`  | Sequencer threshold 2          |
@@ -96,7 +96,7 @@ The enable configuration bytes are bitfields in which each bit is used to
 configure a different parameter. For each enable "i" the bitfield contains:
 
 | Bit | Setting                                                    |
-|-----|------------------------------------------------------------|
+| :-- | :--------------------------------------------------------- |
 | 0   | Enable[i] depends on analog input 0                        |
 | 1   | Enable[i] depends on analog input 1                        |
 | 2   | Enable[i] depends on analog input 2                        |
@@ -191,7 +191,7 @@ require a re-flash of the program on the controller.
 The following fuse settings are required for operation of the firmware:
 
 | Register   | Value   | Details                                                         |
-|------------|---------|-----------------------------------------------------------------|
+| :--------- | :------ | :-------------------------------------------------------------- |
 | `EXTENDED` | `0xFE`  | `SELFPRGEN` - Enabled (allows use of the Flash memory for DNA)  |
 | `HIGH`     | `0xDD`  | `CKDIV8` - Disabled (do not divide the internal clock by 8)     |
 | `LOW`      | `0xE2`  | `BODLEVEL` - Set Brown-out detection at VCC=2.7V                |
