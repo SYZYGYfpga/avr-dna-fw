@@ -49,12 +49,31 @@
 #define ADC_READ_AVERAGES 10
 
 
+#define TEST_MODE_1_PIN 0x04
+#define TEST_MODE_2_PIN 0x02
+#define TEST_MODE_3_PIN 0x01
+
 // Configure the pins used by test pods
 void config_test_mode_pins()
 {
 	DDRB = 7;
 	DDRA &= ~(1 << DDA7);
 }
+
+// Average a set of ADC readings and adjust to mV
+uint32_t average_adc_readings(uint16_t* data, uint32_t size)
+{
+	uint32_t adc_reading = 0;
+	for (uint32_t i = 0; i < size; i++) {
+		adc_reading += (uint32_t) data[i];
+	}
+	adc_reading /= size;
+	adc_reading = adc_reading * ADC_MV;
+	adc_reading = adc_reading >> ADC_BITS;
+	
+	return adc_reading;
+}
+
 
 // Perform test pod checks and communicate with FPGA
 // Communication is as follows:
@@ -83,19 +102,14 @@ void test_pod_check()
 		averageBufferSQ0[averageIndex] = read_adc();
 	}
 	else {
-		adc_reading = 0;
-		for (uint8_t i = 0; i < ADC_READ_AVERAGES; i++) {
-			adc_reading += (uint32_t) averageBufferSQ0[i]; 
-		}
-		adc_reading /= ADC_READ_AVERAGES;
-		adc_reading = adc_reading * ADC_MV;
-		adc_reading = adc_reading >> ADC_BITS;
+		adc_reading = average_adc_readings(averageBufferSQ0, ADC_READ_AVERAGES);
+		
 		if ((adc_reading < HIGH_THRESH_5v) && (adc_reading > LOW_THRESH_5v)) {
-			status_field |= 0x1;
+			status_field |= TEST_MODE_3_PIN;
 		}
 		else
 		{
-			status_field &= ~0x1;
+			status_field &= ~TEST_MODE_3_PIN;
 		}
 	}
 	
@@ -106,19 +120,14 @@ void test_pod_check()
 		averageBufferSQ1[averageIndex] = read_adc();
 	}
 	else {
-		adc_reading = 0;
-		for (uint8_t i = 0; i < ADC_READ_AVERAGES; i++) {
-			adc_reading += (uint32_t) averageBufferSQ1[i];
-		}
-		adc_reading /= ADC_READ_AVERAGES;
-		adc_reading = adc_reading * ADC_MV;
-		adc_reading = adc_reading >> ADC_BITS;
+		adc_reading = average_adc_readings(averageBufferSQ1, ADC_READ_AVERAGES);
+		
 		if ((adc_reading < HIGH_THRESH_VIO) && (adc_reading > LOW_THRESH_VIO)) {
-			status_field |= 0x2;
+			status_field |= TEST_MODE_2_PIN;
 		}
 		else
 		{
-			status_field &= ~0x2;
+			status_field &= ~TEST_MODE_2_PIN;
 		}
 	}
 	
@@ -129,19 +138,14 @@ void test_pod_check()
 		averageBufferSQ2[averageIndex] = read_adc();
 	}
 	else {
-		adc_reading = 0;
-		for (uint8_t i = 0; i < ADC_READ_AVERAGES; i++) {
-			adc_reading += (uint32_t) averageBufferSQ2[i];
-		}
-		adc_reading /= ADC_READ_AVERAGES;
-		adc_reading = adc_reading * ADC_MV;
-		adc_reading = adc_reading >> ADC_BITS;
+		adc_reading = average_adc_readings(averageBufferSQ2, ADC_READ_AVERAGES);
+		
 		if ((adc_reading < HIGH_THRESH_3v3) && (adc_reading > LOW_THRESH_3v3)) {
-			status_field |= 0x4;
+			status_field |= TEST_MODE_1_PIN;
 		}
 		else
 		{
-			status_field &= ~0x4;
+			status_field &= ~TEST_MODE_1_PIN;
 		}
 	}
 	
