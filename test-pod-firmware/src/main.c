@@ -45,10 +45,13 @@
 #define HIGH_THRESH_VIO 376 // 376 mV after resistor divider
 #define LOW_THRESH_VIO  340 // 340 mV after resistor divider
 
-// TODO: Don't do this, use 1.8 instead due to bank compatibility
-// Assume +/- 5% as per SYZYGY spec and a 3.3V VIO
-//#define HIGH_THRESH_VIO 690 // 376 mV after resistor divider
-//#define LOW_THRESH_VIO  624 // 340 mV after resistor divider
+// Number of ADC readings to average
+#define ADC_READ_AVERAGES 10
+
+
+#define TEST_MODE_1_PIN 0x04
+#define TEST_MODE_2_PIN 0x02
+#define TEST_MODE_3_PIN 0x01
 
 // Configure the pins used by test pods
 void config_test_mode_pins()
@@ -56,6 +59,21 @@ void config_test_mode_pins()
 	DDRB = 7;
 	DDRA &= ~(1 << DDA7);
 }
+
+// Average a set of ADC readings and adjust to mV
+uint32_t average_adc_readings(uint16_t* data, uint32_t size)
+{
+	uint32_t adc_reading = 0;
+	for (uint32_t i = 0; i < size; i++) {
+		adc_reading += (uint32_t) data[i];
+	}
+	adc_reading /= size;
+	adc_reading = adc_reading * ADC_MV;
+	adc_reading = adc_reading >> ADC_BITS;
+	
+	return adc_reading;
+}
+
 
 // Perform test pod checks and communicate with FPGA
 // Communication is as follows:
@@ -69,37 +87,74 @@ void config_test_mode_pins()
 //    TEST_MODE_3 = !5V_good
 void test_pod_check()
 {
-	uint8_t status_field = 0;
+	static uint8_t status_field = 0;
+	static uint8_t averageIndex = 0;
+	static uint16_t averageBufferSQ0[ADC_READ_AVERAGES];
+	static uint16_t averageBufferSQ1[ADC_READ_AVERAGES];
+	static uint16_t averageBufferSQ2[ADC_READ_AVERAGES];
+	
 	uint32_t adc_reading;
 	
 	// Read 5V ADC and check
 	set_adc_mux(SQ0_ADC_MUX);
 	START_ADC;
-	adc_reading = (uint32_t) read_adc();
-	adc_reading = adc_reading * ADC_MV;
-	adc_reading = adc_reading >> ADC_BITS;
-	if ((adc_reading < HIGH_THRESH_5v) && (adc_reading > LOW_THRESH_5v)) {
-		status_field |= 0x1;
+	if (averageIndex < ADC_READ_AVERAGES) {
+		averageBufferSQ0[averageIndex] = read_adc();
+	}
+	else {
+		adc_reading = average_adc_readings(averageBufferSQ0, ADC_READ_AVERAGES);
+		
+		if ((adc_reading < HIGH_THRESH_5v) && (adc_reading > LOW_THRESH_5v)) {
+			status_field |= TEST_MODE_3_PIN;
+		}
+		else
+		{
+			status_field &= ~TEST_MODE_3_PIN;
+		}
 	}
 	
 	// Read VIO ADC and check
 	set_adc_mux(SQ1_ADC_MUX);
 	START_ADC;
-	adc_reading = (uint32_t) read_adc();
-	adc_reading = adc_reading * ADC_MV;
-	adc_reading = adc_reading >> ADC_BITS;
-	if ((adc_reading < HIGH_THRESH_VIO) && (adc_reading > LOW_THRESH_VIO)) {
-		status_field |= 0x2;
+	if (averageIndex < ADC_READ_AVERAGES) {
+		averageBufferSQ1[averageIndex] = read_adc();
+	}
+	else {
+		adc_reading = average_adc_readings(averageBufferSQ1, ADC_READ_AVERAGES);
+		
+		if ((adc_reading < HIGH_THRESH_VIO) && (adc_reading > LOW_THRESH_VIO)) {
+			status_field |= TEST_MODE_2_PIN;
+		}
+		else
+		{
+			status_field &= ~TEST_MODE_2_PIN;
+		}
 	}
 	
 	// Read 3.3V ADC and check
 	set_adc_mux(SQ2_ADC_MUX);
 	START_ADC;
-	adc_reading = (uint32_t) read_adc();
-	adc_reading = adc_reading * ADC_MV;
-	adc_reading = adc_reading >> ADC_BITS;
-	if ((adc_reading < HIGH_THRESH_3v3) && (adc_reading > LOW_THRESH_3v3)) {
-		status_field |= 0x4;
+	if (averageIndex < ADC_READ_AVERAGES) {
+		averageBufferSQ2[averageIndex] = read_adc();
+	}
+	else {
+		adc_reading = average_adc_readings(averageBufferSQ2, ADC_READ_AVERAGES);
+		
+		if ((adc_reading < HIGH_THRESH_3v3) && (adc_reading > LOW_THRESH_3v3)) {
+			status_field |= TEST_MODE_1_PIN;
+		}
+		else
+		{
+			status_field &= ~TEST_MODE_1_PIN;
+		}
+	}
+	
+	// Increment current average index
+	if (averageIndex >= ADC_READ_AVERAGES) {
+		averageIndex = 0;
+	}
+	else {
+		averageIndex++;
 	}
 	
 	// Check Test Mode 0 pin and return status
