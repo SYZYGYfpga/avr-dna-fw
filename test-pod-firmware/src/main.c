@@ -35,15 +35,17 @@
 #include "syzygy_seq.h"
 #include "syzygy_dna_fw.h"
 
-// Assume +/- 5% as per SYZYGY spec
-#define HIGH_THRESH_3v3 690 // 690 mV after resistor divider
-#define LOW_THRESH_3v3  624 // 624 mV after resistor divider
-// Assume +/- 10% as per SYZYGY spec
-#define HIGH_THRESH_5v  1096 // 1.096 V after resistor divider
-#define LOW_THRESH_5v   897  // 897 mV after resistor divider
-// Assume +/- 5% as per SYZYGY spec and a 1.8V VIO
-#define HIGH_THRESH_VIO 376 // 376 mV after resistor divider
-#define LOW_THRESH_VIO  340 // 340 mV after resistor divider
+// Sense voltage dividers set to output 20% of the input voltage
+
+// Assume +/- 5%
+#define HIGH_THRESH_3v3 690 // 3450 mV before resistor divider
+#define LOW_THRESH_3v3  624 // 3120 mV before resistor divider
+// Assume +/- 10%
+#define HIGH_THRESH_5v  1096 // 5480 mV before resistor divider
+#define LOW_THRESH_5v   897  // 4485 mV before resistor divider
+// Assume +/- 10%
+#define HIGH_THRESH_VIO 396 // 1980 mV before resistor divider
+#define LOW_THRESH_VIO  324 // 1620 mV before resistor divider
 
 // Number of ADC readings to average
 #define ADC_READ_AVERAGES 10
