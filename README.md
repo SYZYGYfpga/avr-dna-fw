@@ -118,7 +118,7 @@ tools provided by Atmel Studio.
 
 Flash Memory Usage:
 
-- 0x000 - 0xBFF - Availalbe for user application
+- 0x000 - 0xBFF - Available for user application
 - 0xC00 - 0xFFF - Reserved for DNA storage
 
 EEPROM Usage:
@@ -174,7 +174,7 @@ The following pinout is assumed by default:
 Due to the nature of the flash memory available in the AVR microcontroller,
 writing new DNA data to the controller requires that the beginning of a page
 be written to prior to filling in the rest of the page. Each page consists of
-64 bytes. This means that a write to 0x800F must be preceeded by a write to
+64 bytes. This means that a write to 0x800F must be preceded by a write to
 0x8000. As well, the memory writes are designed to only function on a single
 page at a time, writing across page boundaries will result in undefined
 behavior. Flash memory pages on the ATTiny44a are 64 bytes long. It is
