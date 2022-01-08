@@ -106,6 +106,8 @@ configure a different parameter. For each enable "i" the bitfield contains:
 
 ## Build Notes
 
+### AtmelStudio
+
 This firmware is written for use with AVR GCC 5.4 and AtmelStudio 7. To compile
 the firmware in Atmel Studio, create a new project and add the .c files in the
 `src` directory to the project. The project Toolchain settings must be modified
@@ -113,6 +115,12 @@ to include the `include` directory containing the firmware header files. With
 the project configured correctly it should be possible to build and debug using
 tools provided by Atmel Studio.
 
+### CMake
+
+Alternatively the firmware can be built using [CMake](https://cmake.org)
+and any AVR GCC version. If [`avrdude`](https://www.nongnu.org/avrdude/)
+is detected by CMake also targets for flashing (`flash`), writing
+EEPROM (`eeprom`) and setting fuses (`fuse`) are available.
 
 ## Memory Usage
 
