@@ -106,6 +106,8 @@ configure a different parameter. For each enable "i" the bitfield contains:
 
 ## Build Notes
 
+### AtmelStudio
+
 This firmware is written for use with AVR GCC 5.4 and AtmelStudio 7. To compile
 the firmware in Atmel Studio, create a new project and add the .c files in the
 `src` directory to the project. The project Toolchain settings must be modified
@@ -113,6 +115,30 @@ to include the `include` directory containing the firmware header files. With
 the project configured correctly it should be possible to build and debug using
 tools provided by Atmel Studio.
 
+### CMake
+
+Alternatively the firmware can be built using [CMake](https://cmake.org)
+and any AVR GCC version. If [`avrdude`](https://www.nongnu.org/avrdude/)
+is detected by CMake, targets for flashing (`flash`), writing
+EEPROM (`eeprom`) and setting fuses (`fuse`) are also available.
+
+Use the following commands to built the firmware with CMake:
+```
+git clone https://github.com/SYZYGYfpga/avr-dna-fw.git
+mkdir avr-dna-fw-build
+cd avr-dna-fw-build
+cmake ../avr-dna-fw
+make
+```
+
+To program the firmware run:
+```
+make flash
+```
+after compilation. CMake will configure `avrdude` to use the `avrispmkII` by
+default. To use a different program, pass `-DAVRDUDE_PROGRAMMER=<your favorite programmer>` to
+CMAKE. A list of all supported programmers can be found in the
+[avrdude documentation](https://www.nongnu.org/avrdude/user-manual/avrdude_3.html#Option-Descriptions).
 
 ## Memory Usage
 
