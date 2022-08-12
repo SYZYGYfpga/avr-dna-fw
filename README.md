@@ -117,6 +117,7 @@ EEPROM (`eeprom`) and setting fuses (`fuse`) are also available.
 Use the following commands to built the firmware with CMake:
 ```
 git clone https://github.com/SYZYGYfpga/avr-dna-fw.git
+cd dna-firmware
 mkdir avr-dna-fw-build
 cd avr-dna-fw-build
 cmake ../avr-dna-fw
