@@ -1,4 +1,6 @@
 ATMEL_STUDIO/
 *.bak
 *swp
-
+**Debug
+**Release
+**.vs

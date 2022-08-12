@@ -1,4 +1,4 @@
-SYZYGY Firmware
+SYZYGY DNA Firmware
 ===================
 
 ## Overview
@@ -8,7 +8,17 @@ functionality for SYZYGY peripherals. The firmware is designed to be run
 on an Atmel ATTiny 44a microcontroller, though it may be adaptable to
 other Atmel microcontrollers.
 
-# [DNA Firmware](dna-firmware)
+This firmware is written to comply with the SYZYGY Specification v1.0 along
+with the SYZYGY DNA Specification v1.0.
+
+### Features:
+
+- SYZYGY DNA read/write compatible MCU Firmware
+- Able to store up to 1KiB of DNA data
+- Configurable power supply sequencing for peripherals
+
+
+## Architecture
 
 This firmware is designed around the use of multiple interrupts, allowing for
 consistent operation even when the main running loop may require significant
@@ -96,47 +106,19 @@ configure a different parameter. For each enable "i" the bitfield contains:
 
 ## Build Notes
 
-### AtmelStudio
-
 This firmware is written for use with AVR GCC 5.4 and AtmelStudio 7. To compile
 the firmware in Atmel Studio, create a new project and add the .c files in the
 `src` directory to the project. The project Toolchain settings must be modified
-to include the `include` directory containing the firmware header files. Our
-firmware assumes you build with the "Release" configuration. This can be
-changed in the build > configuration manager menu. With the project configured
-correctly it should be possible to build and debug using tools provided by 
-Atmel Studio.
+to include the `include` directory containing the firmware header files. With
+the project configured correctly it should be possible to build and debug using
+tools provided by Atmel Studio.
 
-### CMake
-
-Alternatively the firmware can be built using [CMake](https://cmake.org)
-and any AVR GCC version. If [`avrdude`](https://www.nongnu.org/avrdude/)
-is detected by CMake, targets for flashing (`flash`), writing
-EEPROM (`eeprom`) and setting fuses (`fuse`) are also available.
-
-Use the following commands to built the firmware with CMake:
-```
-git clone https://github.com/SYZYGYfpga/avr-dna-fw.git
-mkdir avr-dna-fw-build
-cd avr-dna-fw-build
-cmake ../avr-dna-fw
-make
-```
-
-To program the firmware run:
-```
-make flash
-```
-after compilation. CMake will configure `avrdude` to use the `avrispmkII` by
-default. To use a different program, pass `-DAVRDUDE_PROGRAMMER=<your favorite programmer>` to
-CMAKE. A list of all supported programmers can be found in the
-[avrdude documentation](https://www.nongnu.org/avrdude/user-manual/avrdude_3.html#Option-Descriptions).
 
 ## Memory Usage
 
 Flash Memory Usage:
 
-- 0x000 - 0xBFF - Available for user application
+- 0x000 - 0xBFF - Availalbe for user application
 - 0xC00 - 0xFFF - Reserved for DNA storage
 
 EEPROM Usage:
@@ -192,7 +174,7 @@ The following pinout is assumed by default:
 Due to the nature of the flash memory available in the AVR microcontroller,
 writing new DNA data to the controller requires that the beginning of a page
 be written to prior to filling in the rest of the page. Each page consists of
-64 bytes. This means that a write to 0x800F must be preceded by a write to
+64 bytes. This means that a write to 0x800F must be preceeded by a write to
 0x8000. As well, the memory writes are designed to only function on a single
 page at a time, writing across page boundaries will result in undefined
 behavior. Flash memory pages on the ATTiny44a are 64 bytes long. It is
@@ -213,10 +195,3 @@ The following fuse settings are required for operation of the firmware:
 | `EXTENDED` | `0xFE`  | `SELFPRGEN` - Enabled (allows use of the Flash memory for DNA)  |
 | `HIGH`     | `0xDD`  | `CKDIV8` - Disabled (do not divide the internal clock by 8)     |
 | `LOW`      | `0xE2`  | `BODLEVEL` - Set Brown-out detection at VCC=2.7V                |
-
-
-<br>
-
-# [Test Pod Firmware](test-pod-firmware)
-
-A specialized firmware for a pod that tests SYZYGY port functionality.
