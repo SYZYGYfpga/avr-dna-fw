@@ -1,6 +1,7 @@
 SYZYGY Firmware
 ===================
 
+# [DNA Firmware](dna-firmware)
 ## Overview
 
 This project contains a reference firmware implementing the SYZYGY DNA
@@ -8,7 +9,13 @@ functionality for SYZYGY peripherals. The firmware is designed to be run
 on an Atmel ATTiny 44a microcontroller, though it may be adaptable to
 other Atmel microcontrollers.
 
-# [DNA Firmware](dna-firmware)
+This firmware is written to comply with the SYZYGY Specification v1.0 along with the SYZYGY DNA Specification v1.0.
+## Features:
+- SYZYGY DNA read/write compatible MCU Firmware
+- Able to store up to 1KiB of DNA data
+- Configurable power supply sequencing for peripherals
+
+## Architecture
 
 This firmware is designed around the use of multiple interrupts, allowing for
 consistent operation even when the main running loop may require significant
