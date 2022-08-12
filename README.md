@@ -228,3 +228,5 @@ The following fuse settings are required for operation of the firmware:
 # [Test Pod Firmware](test-pod-firmware)
 
 A specialized firmware for a pod that tests SYZYGY port functionality.
+
+Used with [SZG-TST-STD](https://docs.opalkelly.com/syzygy-peripherals/szg-tst-std/), [SZG-TST-TXR](https://docs.opalkelly.com/syzygy-peripherals/szg-tst-txr/) and [SZG-TST-TXR4](https://docs.opalkelly.com/syzygy-peripherals/szg-tst-txr4/) peripherals.
