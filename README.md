@@ -111,9 +111,11 @@ configure a different parameter. For each enable "i" the bitfield contains:
 This firmware is written for use with AVR GCC 5.4 and AtmelStudio 7. To compile
 the firmware in Atmel Studio, create a new project and add the .c files in the
 `src` directory to the project. The project Toolchain settings must be modified
-to include the `include` directory containing the firmware header files. With
-the project configured correctly it should be possible to build and debug using
-tools provided by Atmel Studio.
+to include the `include` directory containing the firmware header files. Our
+firmware assumes you build with the "Release" configuration. This can be
+changed in the build > configuration manager menu. With the project configured
+correctly it should be possible to build and debug using tools provided by 
+Atmel Studio.
 
 ### CMake
 
